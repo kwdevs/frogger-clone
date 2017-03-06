@@ -7,9 +7,14 @@ var Enemy = function() {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
+    var speed = this.setSpeed(10, 50);
+    // console.log(Speed);
+    var angle = 0;
+    var velocityX = Math.cos(angle) * speed;
+    // console.log(velocityX);
     //Sets each newly created Enemy to a random lane of the 3 possible lanes
     this.y = this.getStartPoint(1, 3);
-    this.x = 0;
+    this.x = -100;
 
     //Delegates the lookups to Enemy.prototype for newly created Enemies.
     Object.create(Enemy.prototype);
@@ -23,7 +28,9 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers
     ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-
+    //increment the x property here using the keyword 'this'
+    ++this.x;
+    this.x + Enemy.velocityX * dt;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -35,6 +42,7 @@ Enemy.prototype.render = function() {
 //
 //Get random start point for enemy
 Enemy.prototype.getStartPoint = function(min, max) {
+    
     min = Math.ceil(min);
     max = Math.floor(max);
     
@@ -48,6 +56,19 @@ Enemy.prototype.getStartPoint = function(min, max) {
         return this.y = 228;
     };
 
+    // Make sure that only 1 y coordinate is assigned to Enemies so they don't spawn on top of one another.
+
+    
+};
+
+Enemy.prototype.setSpeed = function(min, max) {
+
+    min = Math.ceil(min);
+    max = Math.floor(max);
+
+    var randomSpeed = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    return randomSpeed;
 };
 // Now write your own player class
 // This class requires an update(), render(),
@@ -63,10 +84,10 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
 
     var startCoordinateX = ctx.canvas.width/2 -50;
-    var startCoordinatey = 400;
+    var startCoordinateY = 400;
 
     this.x = startCoordinateX;
-    this.y = startCoordinatey;
+    this.y = startCoordinateY;
 
     var obj = Object.create(Player.prototype);
 
@@ -83,6 +104,10 @@ Player.prototype.update = function(dt) {
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    
+    ctx.save();
+
+    ctx.restore();
 };
 
 Player.prototype.handleInput = function (key) {
@@ -106,10 +131,11 @@ Player.prototype.handleInput = function (key) {
         case 'up':
             if (player.y - 83 > -83) {
                 player.y -= 83;
-                console.log(player.y);
+                // console.log(player);
                 break;
-            } else if (player.y < 0) {
-                ;
+                // Need to figure out how to alert a win when player reaches the water.
+            } else if (player.y < 68) {
+                window.alert("Winner Winner Chicken Dinner");      
             }
         case 'down':
             if (player.y + 83 < ctx.canvas.height - 166) {
@@ -125,14 +151,21 @@ Player.prototype.handleInput = function (key) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var bug = new Enemy();
-var bug1 = new Enemy();
-var bug2 = new Enemy();
+// Create new bugs based on an interval of time and push them to the allEnemies Array
+// using an inline anonymous function passed to setInterval.
+setInterval(function() {    var newBug = new Enemy();
 
-var allEnemies = [bug, bug1, bug2,];
+                            Enemy.y = Enemy.prototype.getStartPoint(1,3);
+
+                            allEnemies.push(newBug);
+
+                        }, 3000);
+
+var allEnemies = [];
+
+console.log(allEnemies);
 
 var player = new Player();
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
