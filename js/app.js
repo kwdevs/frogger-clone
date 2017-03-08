@@ -11,6 +11,10 @@ var Enemy = function() {
     this.y = this.getStartPoint(1, 3);
     this.x = -100;
 
+    //Used for checkCollision
+    var height = 95;
+    var width = 66;
+
     //Delegates the lookups to Enemy.prototype for newly created Enemies.
     Object.create(Enemy.prototype);
 };
@@ -131,13 +135,20 @@ var Player = function() {
     this.x = startCoordinateX;
     this.y = startCoordinateY;
 
+    //Used for checkCollision
+    var height = 95;
+    var width = 66;
+
     var obj = Object.create(Player.prototype);
 };
 
 // Update the player's position
 Player.prototype.update = function(dt) {
     //handleCollision here?
-
+    //Check for win
+    if (this.y < 35) {
+        this.resetGame();
+    }
 };
 
 // Draw the player on the screen, required method for game
@@ -168,9 +179,6 @@ Player.prototype.handleInput = function (key) {
             if (player.y - 83 > -83) {
                 player.y -= 83;
                 break;
-                // Need to figure out how to alert a win when player reaches the water.
-            } else if (player.y < 68) {
-                window.alert("Winner Winner Chicken Dinner");      
             }
         case 'down':
             if (player.y + 83 < ctx.canvas.height - 166) {
@@ -183,19 +191,48 @@ Player.prototype.handleInput = function (key) {
 };
 
 //Method to determine if player hits enemies or wins game
-Player.prototype.checkCollisions = function() {
+function checkCollisions() {
 
+//     //Logic
+    for (let bugs of allEnemies) {
+        
+        console.log(bugs);
+        // if(bugs.x < Player.x + Player.width 
+        //     && bugs.x + bugs.width > Player.x 
+        //     && bugs.y < Player.y + Player.height 
+        //     && bugs.height + bugs.y > Player.y) {
+        //         return true;
+        // } else {
+        //     return false;
+        // }
+    };
+};
+
+
+//Very basic game reset method
+//TODO add you won and you lost pop ups
+//with try again or quit options
+Player.prototype.resetGame = function() {
+    Object.freeze(Enemy);
+    console.log('win');
+    document.location.href = '';
 };
 
 // Create new enemies based on an interval of time and push them to the allEnemies Array
 // using an inline anonymous function passed to setInterval.
+//TODO: Commented out this to test collision on single bug
 setInterval(function() {    var newBug = new Enemy();
 
                             allEnemies.push(newBug);
 
                         }, 1200);
 
+//temporary single bug for collision testing
+// var bug1 = new Enemy();
+
 var allEnemies = [];
+
+// console.log(allEnemies);
 
 var player = new Player();
 
