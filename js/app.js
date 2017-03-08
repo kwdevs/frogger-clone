@@ -1,36 +1,31 @@
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
-    var speed = this.setSpeed(10, 50);
-    // console.log(Speed);
-    var angle = 0;
-    var velocityX = Math.cos(angle) * speed;
-    // console.log(velocityX);
+    this.speed = this.setSpeed(10, 200);
+    this.velocity = this.velocityX();
+    
     //Sets each newly created Enemy to a random lane of the 3 possible lanes
     this.y = this.getStartPoint(1, 3);
     this.x = -100;
 
     //Delegates the lookups to Enemy.prototype for newly created Enemies.
     Object.create(Enemy.prototype);
-
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers
+
     ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+    
     //increment the x property here using the keyword 'this'
-    ++this.x;
-    this.x + Enemy.velocityX * dt;
+    this.x += this.velocity * dt;
+    
+    //Remove excess enemies
+    this.removeEnemies();
 };
 
 // Draw the enemy on the screen, required method for game
@@ -38,8 +33,10 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-//Begin my Enemy Methods
-//
+//////////////////////////
+//Begin My Enemy Methods//
+//////////////////////////
+
 //Get random start point for enemy
 Enemy.prototype.getStartPoint = function(min, max) {
     
@@ -47,6 +44,13 @@ Enemy.prototype.getStartPoint = function(min, max) {
     max = Math.floor(max);
     
     var randomPoint = Math.floor(Math.random() * (max - min + 1)) + min;
+    
+    var lastStartPoint = [];
+    
+    lastStartPoint.push(randomPoint);
+
+    //Helps diversify spawn points
+    this.spreadEnemies(lastStartPoint, randomPoint);
 
     if (randomPoint === 1) {
         return this.y = 60;
@@ -54,13 +58,20 @@ Enemy.prototype.getStartPoint = function(min, max) {
         return this.y = 143;
     }   else {
         return this.y = 228;
+    }; 
+};
+ 
+//Make enemies start point more diverse.
+Enemy.prototype.spreadEnemies = function(lastStartPoint,randomPoint) {
+    if (lastStartPoint = randomPoint) {
+        
+        ++randomPoint;
+
+        return randomPoint;
     };
-
-    // Make sure that only 1 y coordinate is assigned to Enemies so they don't spawn on top of one another.
-
-    
 };
 
+//Random speed for each Enemy instance
 Enemy.prototype.setSpeed = function(min, max) {
 
     min = Math.ceil(min);
@@ -70,46 +81,71 @@ Enemy.prototype.setSpeed = function(min, max) {
 
     return randomSpeed;
 };
-// Now write your own player class
-// This class requires an update(), render(),
-// a handleInput(), checkCollisions() method.
+
+//Get random velocity
+Enemy.prototype.velocityX = function(){
+    
+    var angle = 0;
+    
+    var getRandomNum = function(min, max) {
+        
+        min = Math.ceil(min);
+        max = Math.floor(max);
+
+        return Math.floor(Math.random() * (max - min)) + min;
+    };
+    
+    var multiplier = getRandomNum(1, 5);
+    
+    //No need for a degrees to radians conversion yet
+    //Since angle = 0 is the same as radians = 0
+    var newAngle = Math.ceil(Math.cos(angle));
+    var radsToDegrees = Math.ceil((multiplier * (newAngle * 180 / Math.PI)));
+    var velocity = radsToDegrees;
+
+    return velocity;
+};
+
+//Remove enemies that have exited right on canvas
+//preventing excess buildup of offscreen enemies
+Enemy.prototype.removeEnemies = function () {
+    if (allEnemies.length > 10) {
+        allEnemies.splice(0,1);
+    };
+};
+
+///////////////////////////////////
+//Begin Player Class And Methods//
+/////////////////////////////////
 
 // Player Class
 var Player = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
+    
     // The image/sprite for our player, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/char-boy.png';
 
     var startCoordinateX = ctx.canvas.width/2 -50;
-    var startCoordinateY = 400;
+    var startCoordinateY = ctx.canvas.width - 125;
 
     this.x = startCoordinateX;
     this.y = startCoordinateY;
 
     var obj = Object.create(Player.prototype);
-
 };
 
 // Update the player's position
 Player.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    //handleCollision here?
 
 };
 
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    
-    ctx.save();
-
-    ctx.restore();
 };
 
+//Accepts allowedKeys and moves player accordingly.
 Player.prototype.handleInput = function (key) {
     
     switch (key) {
@@ -131,7 +167,6 @@ Player.prototype.handleInput = function (key) {
         case 'up':
             if (player.y - 83 > -83) {
                 player.y -= 83;
-                // console.log(player);
                 break;
                 // Need to figure out how to alert a win when player reaches the water.
             } else if (player.y < 68) {
@@ -147,23 +182,20 @@ Player.prototype.handleInput = function (key) {
     };
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+//Method to determine if player hits enemies or wins game
+Player.prototype.checkCollisions = function() {
 
-// Create new bugs based on an interval of time and push them to the allEnemies Array
+};
+
+// Create new enemies based on an interval of time and push them to the allEnemies Array
 // using an inline anonymous function passed to setInterval.
 setInterval(function() {    var newBug = new Enemy();
 
-                            Enemy.y = Enemy.prototype.getStartPoint(1,3);
-
                             allEnemies.push(newBug);
 
-                        }, 3000);
+                        }, 1200);
 
 var allEnemies = [];
-
-console.log(allEnemies);
 
 var player = new Player();
 
