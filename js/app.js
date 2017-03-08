@@ -11,10 +11,6 @@ var Enemy = function() {
     this.y = this.getStartPoint(1, 3);
     this.x = -100;
 
-    //Used for checkCollision
-    var height = 95;
-    var width = 66;
-
     //Delegates the lookups to Enemy.prototype for newly created Enemies.
     Object.create(Enemy.prototype);
 };
@@ -26,7 +22,8 @@ Enemy.prototype.update = function(dt) {
     ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
     
     //increment the x property here using the keyword 'this'
-    this.x += this.velocity * dt;
+    // this.x += this.velocity * dt;
+    ++this.x;
     
     //Remove excess enemies
     this.removeEnemies();
@@ -127,24 +124,19 @@ var Player = function() {
     
     // The image/sprite for our player, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/char-boy.png';
+    this.sprite = 'images/char-princess-girl.png';
 
     var startCoordinateX = ctx.canvas.width/2 -50;
-    var startCoordinateY = ctx.canvas.width - 125;
+    var startCoordinateY = ctx.canvas.width - 100;
 
     this.x = startCoordinateX;
     this.y = startCoordinateY;
-
-    //Used for checkCollision
-    var height = 95;
-    var width = 66;
 
     var obj = Object.create(Player.prototype);
 };
 
 // Update the player's position
 Player.prototype.update = function(dt) {
-    //handleCollision here?
     //Check for win
     if (this.y < 35) {
         this.resetGame();
@@ -192,19 +184,20 @@ Player.prototype.handleInput = function (key) {
 
 //Method to determine if player hits enemies or wins game
 function checkCollisions() {
+    
+    player.width = 69;
+    player.height = 71;
 
-//     //Logic
-    for (let bugs of allEnemies) {
-        
-        console.log(bugs);
-        // if(bugs.x < Player.x + Player.width 
-        //     && bugs.x + bugs.width > Player.x 
-        //     && bugs.y < Player.y + Player.height 
-        //     && bugs.height + bugs.y > Player.y) {
-        //         return true;
-        // } else {
-        //     return false;
-        // }
+    allEnemies.width = 96;
+    allEnemies.height = 65;
+
+    for (var i = 0; allEnemies[i]; i++) {
+        if (player.x < allEnemies[i].x + allEnemies.width
+            && player.x + player.width > allEnemies[i].x
+            && player.y < allEnemies[i].y + allEnemies.height
+            && player.height + player.y > allEnemies[i].y) {
+                console.log('collision motha fucka')
+        };
     };
 };
 
@@ -221,16 +214,16 @@ Player.prototype.resetGame = function() {
 // Create new enemies based on an interval of time and push them to the allEnemies Array
 // using an inline anonymous function passed to setInterval.
 //TODO: Commented out this to test collision on single bug
-setInterval(function() {    var newBug = new Enemy();
+// setInterval(function() {    var newBug = new Enemy();
 
-                            allEnemies.push(newBug);
+//                             allEnemies.push(newBug);
 
-                        }, 1200);
+//                         }, 1200);
 
 //temporary single bug for collision testing
-// var bug1 = new Enemy();
+var bug1 = new Enemy();
 
-var allEnemies = [];
+var allEnemies = [bug1];
 
 // console.log(allEnemies);
 
