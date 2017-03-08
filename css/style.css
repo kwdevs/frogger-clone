@@ -6,7 +6,3 @@ body {
     -o-background-size: cover;
     background-size: cover;
 }
-
-canvas {
-	background-color: pink;
-}
