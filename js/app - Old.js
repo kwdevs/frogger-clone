@@ -135,7 +135,7 @@ var Player = function() {
 Player.prototype.update = function(dt) {
 
 };
-
+console.log(Player.prototype.update);
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -175,12 +175,21 @@ Player.prototype.handleInput = function (key) {
     };
 };
 
-// Very basic game reset method
+//Very basic game reset method
 Player.prototype.resetGame = function() {
     Object.freeze(Enemy);
     document.location.href = '';
 };
- 
+
+Player.prototype.checkWin = function() {
+    if (Player.y = -10) {
+        displayPopup('images/winner.png', 600, 200);
+    } else {
+        return false;
+    };
+};
+
+
 //Method to determine if player hits enemies or wins game
 function checkCollisions() {
     
@@ -191,15 +200,27 @@ function checkCollisions() {
     allEnemies.height = 65;
 
     for (var i = 0; allEnemies[i]; i++) {
-        
         if (player.x < allEnemies[i].x + allEnemies.width
             && player.x + player.width > allEnemies[i].x
             && player.y < allEnemies[i].y + allEnemies.height
-            && player.height + player.y > allEnemies[i].y) { 
+            && player.height + player.y > allEnemies[i].y) {
                 Player.prototype.resetGame();
-            };
+        };
     };
 };
+
+function displayPopup(src, width, height) {
+
+    var popup = document.createElement('img');
+    
+    popup.src = src;
+    popup.width = width;
+    popup.height = height;
+
+    document.body.appendChild(popup);
+};
+
+
 
 // Create new enemies based on an interval of time and push them to the allEnemies Array
 // using an inline anonymous function passed to setInterval.
