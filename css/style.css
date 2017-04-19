@@ -6,3 +6,11 @@ body {
     -o-background-size: cover;
     background-size: cover;
 }
+
+#loser {
+	display: none;
+}
+
+#winner {
+	display: none;
+}

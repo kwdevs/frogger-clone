@@ -136,10 +136,14 @@ var Player = function() {
 
 // Update the player's position
 Player.prototype.update = function(dt) {
-    //Check for win
-    if (this.y < 35) {
-        this.resetGame();
-    }
+
+    if (player.isCollision) {
+        player.resetGameOnLoss();
+    };
+
+    if (player.isWinner) {
+        player.resetGameOnWin();
+    } else return;
 };
 
 // Draw the player on the screen, required method for game
@@ -169,6 +173,9 @@ Player.prototype.handleInput = function (key) {
         case 'up':
             if (player.y - 83 > -83) {
                 player.y -= 83;
+                if (player.y === -10) {
+                    player.isWinner = true;
+                }
                 break;
             }
         case 'down':
@@ -179,6 +186,15 @@ Player.prototype.handleInput = function (key) {
                 return;
             }
     };
+};
+
+//Used to set collision variable and set to true if collision detected in checkCollisions function.
+Player.prototype.setCollisionState = function() {
+    this.isCollision = false;
+};
+
+Player.prototype.setWinState = function () {
+    this.isWinner = false;
 };
 
 //Method to determine if player hits enemies or wins game
@@ -195,20 +211,29 @@ function checkCollisions() {
             && player.x + player.width > allEnemies[i].x
             && player.y < allEnemies[i].y + allEnemies.height
             && player.height + player.y > allEnemies[i].y) {
-                console.log('collision motha fucka')
-                Player.prototype.resetGame();
+                player.isCollision = true;
         };
     };
 };
 
+Player.prototype.resetGameOnLoss = function() {
+    
+    document.getElementById('loser').style.display = 'initial';
 
-//Very basic game reset method
-//TODO add you won and you lost pop ups
-//with try again or quit options
-Player.prototype.resetGame = function() {
-    Object.freeze(Enemy);
-    console.log('win');
-    document.location.href = '';
+    this.x = ctx.canvas.width/2 -50;
+    this.y = ctx.canvas.width - 100;
+
+    player.setCollisionState();
+
+};
+
+Player.prototype.resetGameOnWin = function () {
+    document.getElementById('winner').style.display = 'initial';
+    
+    this.x = ctx.canvas.width/2 -50;
+    this.y = ctx.canvas.width - 100;
+
+    player.setWinState(); 
 };
 
 // Create new enemies based on an interval of time and push them to the allEnemies Array
