@@ -1,14 +1,12 @@
 body {
+	font-family: 'Indie Flower', cursive;
+	font-size: 112px; 
     text-align: center;
     background: url("../images/bg-full.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-}
-
-#loser {
-	display: none;
 }
 
 #winner {

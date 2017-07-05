@@ -6,7 +6,7 @@ var Enemy = function() {
 
     this.speed = this.setSpeed(10, 200);
     this.velocity = this.velocityX();
-    
+
     //Sets each newly created Enemy to a random lane of the 3 possible lanes
     this.y = this.getStartPoint(1, 3);
     this.x = -100;
@@ -19,11 +19,11 @@ var Enemy = function() {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
 
-    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-    
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
     //increment the x property here using the keyword 'this'
     this.x += this.velocity * dt;
-    
+
     //Remove excess enemies
     this.removeEnemies();
 };
@@ -33,20 +33,18 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-//////////////////////////
-//Begin My Enemy Methods//
-//////////////////////////
+//Begin My Enemy Methods
 
 //Get random start point for enemy
 Enemy.prototype.getStartPoint = function(min, max) {
-    
+
     min = Math.ceil(min);
     max = Math.floor(max);
-    
+
     var randomPoint = Math.floor(Math.random() * (max - min + 1)) + min;
-    
+
     var lastStartPoint = [];
-    
+
     lastStartPoint.push(randomPoint);
 
     //Helps diversify spawn points
@@ -54,17 +52,17 @@ Enemy.prototype.getStartPoint = function(min, max) {
 
     if (randomPoint === 1) {
         return this.y = 60;
-    }   else if (randomPoint === 2) {
+    } else if (randomPoint === 2) {
         return this.y = 143;
-    }   else {
+    } else {
         return this.y = 228;
-    }; 
+    };
 };
- 
+
 //Make enemies start point more diverse.
-Enemy.prototype.spreadEnemies = function(lastStartPoint,randomPoint) {
+Enemy.prototype.spreadEnemies = function(lastStartPoint, randomPoint) {
     if (lastStartPoint = randomPoint) {
-        
+
         ++randomPoint;
 
         return randomPoint;
@@ -83,20 +81,20 @@ Enemy.prototype.setSpeed = function(min, max) {
 };
 
 //Get random velocity
-Enemy.prototype.velocityX = function(){
-    
+Enemy.prototype.velocityX = function() {
+
     var angle = 0;
-    
+
     var getRandomNum = function(min, max) {
-        
+
         min = Math.ceil(min);
         max = Math.floor(max);
 
         return Math.floor(Math.random() * (max - min)) + min;
     };
-    
+
     var multiplier = getRandomNum(1, 5);
-    
+
     //No need for a degrees to radians conversion yet
     //Since angle = 0 is the same as radians = 0
     var newAngle = Math.ceil(Math.cos(angle));
@@ -108,24 +106,22 @@ Enemy.prototype.velocityX = function(){
 
 //Remove enemies that have exited right on canvas
 //preventing excess buildup of offscreen enemies
-Enemy.prototype.removeEnemies = function () {
+Enemy.prototype.removeEnemies = function() {
     if (allEnemies.length > 10) {
-        allEnemies.splice(0,1);
+        allEnemies.splice(0, 1);
     };
 };
 
-///////////////////////////////////
-//Begin Player Class And Methods//
-/////////////////////////////////
+//Begin Player Class And Methods
 
 // Player Class
 var Player = function() {
-    
+
     // The image/sprite for our player, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/char-princess-girl.png';
 
-    var startCoordinateX = ctx.canvas.width/2 -50;
+    var startCoordinateX = ctx.canvas.width / 2 - 50;
     var startCoordinateY = ctx.canvas.width - 100;
 
     this.x = startCoordinateX;
@@ -143,6 +139,10 @@ Player.prototype.update = function(dt) {
 
     if (player.isWinner) {
         player.resetGameOnWin();
+        $("<div>Winner Winner, Chicken Dinner!</div>").attr('id', 'winSlogan').insertAfter("canvas");
+        setTimeout(function() {
+            $('#winSlogan').remove();
+        }, 3000)
     } else return;
 };
 
@@ -152,8 +152,8 @@ Player.prototype.render = function() {
 };
 
 //Accepts allowedKeys and moves player accordingly.
-Player.prototype.handleInput = function (key) {
-    
+Player.prototype.handleInput = function(key) {
+
     switch (key) {
 
         case 'left':
@@ -193,13 +193,13 @@ Player.prototype.setCollisionState = function() {
     this.isCollision = false;
 };
 
-Player.prototype.setWinState = function () {
+Player.prototype.setWinState = function() {
     this.isWinner = false;
 };
 
 //Method to determine if player hits enemies or wins game
 function checkCollisions() {
-    
+
     player.width = 67;
     player.height = 70;
 
@@ -207,43 +207,40 @@ function checkCollisions() {
     allEnemies.height = 65;
 
     for (var i = 0; allEnemies[i]; i++) {
-        if (player.x < allEnemies[i].x + allEnemies.width
-            && player.x + player.width > allEnemies[i].x
-            && player.y < allEnemies[i].y + allEnemies.height
-            && player.height + player.y > allEnemies[i].y) {
-                player.isCollision = true;
+        if (player.x < allEnemies[i].x + allEnemies.width &&
+            player.x + player.width > allEnemies[i].x &&
+            player.y < allEnemies[i].y + allEnemies.height &&
+            player.height + player.y > allEnemies[i].y) {
+            player.isCollision = true;
         };
     };
 };
 
 Player.prototype.resetGameOnLoss = function() {
-    
-    document.getElementById('loser').style.display = 'initial';
 
-    this.x = ctx.canvas.width/2 -50;
+    this.x = ctx.canvas.width / 2 - 50;
     this.y = ctx.canvas.width - 100;
 
     player.setCollisionState();
-
 };
 
-Player.prototype.resetGameOnWin = function () {
-    document.getElementById('winner').style.display = 'initial';
-    
-    this.x = ctx.canvas.width/2 -50;
+Player.prototype.resetGameOnWin = function() {
+
+    this.x = ctx.canvas.width / 2 - 50;
     this.y = ctx.canvas.width - 100;
 
-    player.setWinState(); 
+    player.setWinState();
 };
 
 // Create new enemies based on an interval of time and push them to the allEnemies Array
 // using an inline anonymous function passed to setInterval.
-//TODO: Commented out this to test collision on single bug
-setInterval(function() {    var newBug = new Enemy();
 
-                            allEnemies.push(newBug);
+setInterval(function() {
+    var newBug = new Enemy();
 
-                        }, 1200);
+    allEnemies.push(newBug);
+
+}, 1200);
 
 //temporary single bug for collision testing
 // var bug1 = new Enemy();
