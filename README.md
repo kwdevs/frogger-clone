@@ -1,7 +1,19 @@
-frontend-nanodegree-arcade-game
-===============================
+# Frogger Game Clone
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+This is a simple Frogger Clone and is one of my first real javascript projects.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
-# frogger-clone
+# Installation
+
+  - Start by navigating to the [project repository][git-repo-url]
+  - Click the green "Clone or Download" button and then download the files as a ZIP.
+  - Extract the ZIP file to your desktop.  If you need an archiver, try [7-zip][7-zip] it's free!
+  - Open the file you just extracted named "frogger-clone-master".
+  - Double click on the file named index.
+  - Enjoy!
+
+   [git-repo-url]: <https://github.com/kwdevs/frogger-clone>
+   [7-zip]: <http://www.7-zip.org/>
+   
+# Feedback
+
+Report any bugs or send any suggestions for improvements to the game to morrison.devs@gmail.com
