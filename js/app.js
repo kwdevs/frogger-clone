@@ -133,12 +133,12 @@ var Player = function() {
 // Update the player's position
 Player.prototype.update = function(dt) {
 
-    if (player.isCollision) {
-        player.resetGameOnLoss();
+    if (this.isCollision) {
+        this.resetGameOnLoss();
     };
 
-    if (player.isWinner) {
-        player.resetGameOnWin();
+    if (this.isWinner) {
+        this.resetGameOnWin();
         $("<div>Winner Winner, Chicken Dinner!</div>").attr('id', 'winSlogan').insertAfter("canvas");
         setTimeout(function() {
             $('#winSlogan').remove();
@@ -157,30 +157,30 @@ Player.prototype.handleInput = function(key) {
     switch (key) {
 
         case 'left':
-            if (player.x - 100 > 0) {
-                player.x -= 100;
+            if (this.x - 100 > 0) {
+                this.x -= 100;
                 break;
             } else {
                 return;
             }
         case 'right':
-            if (player.x + 100 < ctx.canvas.width - 100) {
-                player.x += 100;
+            if (this.x + 100 < ctx.canvas.width - 100) {
+                this.x += 100;
                 break;
             } else {
                 return;
             }
         case 'up':
-            if (player.y - 83 > -83) {
-                player.y -= 83;
-                if (player.y === -10) {
-                    player.isWinner = true;
+            if (this.y - 83 > -83) {
+                this.y -= 83;
+                if (this.y === -10) {
+                    this.isWinner = true;
                 }
                 break;
             }
         case 'down':
-            if (player.y + 83 < ctx.canvas.height - 166) {
-                player.y += 83;
+            if (this.y + 83 < ctx.canvas.height - 166) {
+                this.y += 83;
                 break;
             } else {
                 return;
@@ -199,7 +199,6 @@ Player.prototype.setWinState = function() {
 
 //Method to determine if player hits enemies or wins game
 function checkCollisions() {
-
     player.width = 67;
     player.height = 70;
 
@@ -221,7 +220,7 @@ Player.prototype.resetGameOnLoss = function() {
     this.x = ctx.canvas.width / 2 - 50;
     this.y = ctx.canvas.width - 100;
 
-    player.setCollisionState();
+    this.setCollisionState();
 };
 
 Player.prototype.resetGameOnWin = function() {
@@ -229,7 +228,7 @@ Player.prototype.resetGameOnWin = function() {
     this.x = ctx.canvas.width / 2 - 50;
     this.y = ctx.canvas.width - 100;
 
-    player.setWinState();
+    this.setWinState();
 };
 
 // Create new enemies based on an interval of time and push them to the allEnemies Array
